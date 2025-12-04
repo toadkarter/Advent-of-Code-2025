@@ -49,6 +49,36 @@ int get_part_one_answer(const std::vector<std::vector<bool>>& grid)
     return accessible_rolls;
 }
 
+int get_part_two_answer(std::vector<std::vector<bool>>& grid) {
+    int accessible_rolls = 0;
+
+    bool roll_removed = false;
+
+    do
+    {
+        roll_removed = false;
+        for (int row = 0; row < grid.size(); row++)
+        {
+            const std::vector<bool>& current_row = grid[row];
+            for (int column = 0; column < current_row.size(); column++)
+            {
+                if (coordinates_have_roll(row, column, grid))
+                {
+                    if (get_num_surrounding_coordinates(row, column, grid) < 4)
+                    {
+                        accessible_rolls++;
+
+                        grid[row][column] = false;
+                        roll_removed = true;
+                    }
+                }
+            }
+        }
+    } while (roll_removed);
+
+    return accessible_rolls;
+}
+
 int main()
 {
     std::ifstream file("inputs/input.txt");
@@ -79,6 +109,7 @@ int main()
     }
 
     part_one_answer = get_part_one_answer(grid);
+    part_two_answer = get_part_two_answer(grid);
 
     std::cout << "Part One Answer: " << part_one_answer << std::endl;
     std::cout << "Part Two Answer: " << part_two_answer << std::endl;
